@@ -1,0 +1,48 @@
+
+<!DOCTYPE html>
+  <html lang="en">
+    <head>
+      <meta charset="utf-8">
+      <title>MY GROUPS</title>
+      <link rel='stylesheet' type="text/css" href='/css/background.css'>
+      <link rel='stylesheet' type="text/css" href='/css/styles.css'>
+    </head>
+    <style>
+        .rectangle{
+            width: auto;
+            height: 515px;
+            background: lightslategray;
+        }
+    </style>
+    <body class="logo">
+      <b>CMDB API</b>
+      <ul class="home">
+        <li><a href="/"> HOME </a></li>
+        <li><a href="/movieSearch"> MOVIES </a></li>
+        </li>
+        <li class="dropdown">
+          <a class="dropbtn">GROUPS</a>
+          <div class="dropdown-content">
+              <a href="/groups">MY GROUPS</a>
+              <a href="/group">CREATE NEW GROUP</a>
+              <a href="/editGroup">EDIT GROUP</a>
+              <a href="/deleteGroup">DELETE GROUPS</a> 
+          </div>
+        </li>
+        <li style="float:right"><a  href="/login"> LOGIN </a></li>
+        <li style="float:right"><a  href="/createUser"> SIGN UP </a></li>
+        </ul>
+        <div class="rectangle">
+            <b style="font-size: 52px;">Remove Movie From Group: {{data.name}}</b>
+            <form action="/deleteMovieFromGroup/{{data.id}}" method="POST" class="form_search">
+                <label style="color:white;font-size:22px;" for="movie">Choose the movie you want to delete:</label>
+                <select name="movie" id="movie">
+                    {{#each data.movies}}
+                        <option value="{{id}}">{{title}}</option>
+                    {{/each}}
+                </select>
+                <p><button name="subject" type="submit">DELETE MOVIE FROM GROUP</button></form></p>
+            </form>
+        </div>
+    </body>
+  </html>

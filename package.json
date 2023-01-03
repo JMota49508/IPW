@@ -1,0 +1,39 @@
+{
+  "name": "trabalho1",
+  "version": "1.0.0",
+  "description": "cmdb-ipw-leic2223i-ipw31d-g10",
+  "main": "cmdb-server.mjs",
+  "scripts": {
+    "test": "mocha --timeout 100000000000"
+  },
+  "author": "Mota",
+  "license": "ISC",
+  "dependencies": {
+    "chai": "^4.3.7",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "hbs": "^4.2.0",
+    "mocha": "^10.1.0",
+    "node": "^19.2.0",
+    "node-fetch": "^3.2.10",
+    "path": "^0.12.7",
+    "swagger-ui-express": "^4.6.0",
+    "url": "^0.11.0",
+    "yaml": "^2.1.3",
+    "yamljs": "^0.3.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/isel-leic-ipw/cmdb-ipw-leic2223i-ipw31d-g10.git"
+  },
+  "bugs": {
+    "url": "https://github.com/isel-leic-ipw/cmdb-ipw-leic2223i-ipw31d-g10/issues"
+  },
+  "homepage": "https://github.com/isel-leic-ipw/cmdb-ipw-leic2223i-ipw31d-g10#readme",
+  "directories": {
+    "test": "test"
+  },
+  "devDependencies": {
+    "supertest": "^6.3.3"
+  }
+}

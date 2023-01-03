@@ -1,0 +1,550 @@
+openapi: 3.0.1
+info:
+  title: CMDB API
+  description: This is a the CMDB (Chelas Movies DataBase) API.
+  contact:
+    email: a49476@alunos.isel.pt
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+servers:
+  - description: Localhost server for testing API.
+    url: http://localhost:8080/
+
+tags:
+- name: Movies
+- name: Group
+- name: Users
+
+
+paths:
+
+  /user:                                            #PATH: USERES
+    post:                                            #USER: POST(CreatUser)
+      tags:
+      - Users
+      description: Adds a user to the system.
+      operationId: createUser   
+      parameters:
+      - name: username
+        in: query 
+        description: Name of the user that will be created.
+        schema:
+          type: string
+      - name: password
+        in: query
+        description: Created username password.
+        schema:
+          type: string
+      requestBody:
+        description: Creat User
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewUser' 
+        required: true
+
+      responses:
+        201:
+          description: User with token ${newUser.token} created with success.
+          content:
+            application/json:
+              schema:
+                required:
+                - token
+                type: object
+                properties:
+                  token:
+                    type: string
+                    format: uuid
+                    
+        400:
+          description: Bad input parameter.
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/INVALID_PARAMETER'
+      
+    get:                                                  #PATH: USERES              
+      tags:                                               #USER:GET(GETUSER)
+      - Users
+      description: Get the users that already exist.
+      operationId: getUsers
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Searched results matching criteria.
+
+  /movie:                                                #PATH: MOVIE             
+    get:                                                 #MOVIE:GET(GETMOVIES)                                
+      tags:
+      - Movies
+     # summary: get Tasks
+      description: Gets a list of the Top 250 Movies.
+      operationId: getMovies
+      security:
+        - bearerAuth: []
+      parameters: 
+      - name: limit
+        in: query
+        description: Maximum number of movies to return.
+        schema:
+          maximum: 250
+          minimum: 0
+          type: integer
+
+      responses:
+        200:
+          description: Searched results matching criteria.
+        400:
+          description: Bad input parameter.
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/INVALID_PARAMETER'
+
+  /getMovie:                                            #PATH: MOVIE
+    get:                                                #MOVIE:GET(getMovieByName)
+      tags:
+      - Movies
+     # summary: Search a movie by it's name.
+      description: Searches a Movie by its name.
+      operationId: getMovieByName
+      security:
+        - bearerAuth: []
+      parameters:
+      - name: query
+        in: query 
+        description: Name of movie to be fetched.
+        required: true
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: Maximum number of movies to return.
+        schema:
+            maximum: 250
+            minimum: 0
+            type: integer
+
+      responses:
+        200:
+          description: Successful operation.
+        
+        400:
+          description: Invalid ID supplied.
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/MOVIE_NOT_FOUND'
+
+  /group: 
+    get:  #group/get                                        
+      tags:
+      - Group
+     # summary: Search a movie by it's name.
+      description: Displays all the existent groups.
+      operationId: getGroups
+      security:
+        - bearerAuth: []
+      parameters:
+      - name: token
+        in: path
+        description: Access token needed to view all groups.
+        required: true
+        schema:
+          type: string
+         
+
+      responses:
+        200:
+          description: Successful operation.
+          
+        404:
+          description: Invalid ID supplied.
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/GROUP_NOT_FOUND'
+
+    post:                       
+      tags:                      
+      - Group
+      description: Adds a group to the system.
+      operationId: createGroup  
+      security:
+        - bearerAuth: []
+      parameters:
+      - name: name
+        in: path
+        description: Name of the group.
+        required: true
+        schema:
+          type: string
+      - name: desc
+        in: path
+        description: group description
+        required: true
+        schema:
+          type: string
+      - name: token
+        in: path
+        description: Group access token.
+        required: true
+        schema:
+          type: string
+      requestBody:                                                                         
+        description: Creats User.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewUser'
+        required: false
+      responses:
+        201:
+          description: Group with id ${newGroup.id} created with success.
+          content:
+            application/json:
+              schema:
+                required:
+                - token
+                type: object
+                properties:
+                  token:
+                    type: string
+                    format: uuid
+        400:
+          description: Invalid ID supplied
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/INVALID_PARAMETER'  
+        404:
+          description: Invalid ID supplied.
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/USER_NOT_FOUND'                                    
+
+  /group/{groupId}:
+    get:                                 
+      tags:
+      - Group
+     # summary: Search a movie by it's name.
+      description: Searches a movie by its ID in group.
+      operationId: getGroupById
+      security:
+        - bearerAuth: []
+      parameters:
+      - name: id
+        in: path
+        description: Movie ID in group.
+        required: true
+        schema:
+          type: string
+      - name: token
+        in: path
+        description: Group access token.
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: Successful operation.
+        400:
+          description: Invalid ID supplied.
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/INVALID_PARAMETER'
+        404:
+          description: Invalid ID supplied.
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/USER_NOT_FOUND'                                   
+    put:                                 
+      tags:
+      - Group
+     # summary: Search a movie by it's name.
+      description: Add movie in the group.
+      operationId: editGroup
+      security:
+        - bearerAuth: []
+      parameters:
+      - name: id
+        in: path
+        description: ID of the movie that wants to be added.
+        required: true
+        schema:
+          type: string 
+      - name: name
+        in: path
+        description: Name of the movie to be added.
+        required: true
+        schema:
+          type: string
+      - name: desc
+        in: path
+        description: Description of the movie that wants to be added.
+        required: true
+        schema:
+          type: string
+      - name: token
+        in: path
+        description: Token of the group to be edited.
+        required: true
+        schema:
+          type: string
+
+      responses:
+        202:
+          description: Group with id ${groupId} edited with success.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Movie'
+        400:
+          description: Invalid ID supplied.
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/INVALID_PARAMETER'
+                                           
+        404:
+          description: Invalid ID supplied.
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/GROUP_NOT_FOUND'
+
+               
+    delete: #group/groupId/delete  
+      tags:
+      - Group                                          
+      description: Deletes a given movie from a given group.
+      operationId: deleteGroup
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: ID the movie that will be deleted.
+          required: true
+          schema:
+            type: string
+        - name: token
+          in: path
+          description: Group token that to be edited.
+          required: true
+          schema:
+            type: string
+          
+      responses:
+        202:
+          description: Group with id ${groupId} deleted with success.
+            #content:
+            #application/json:
+              #schema:
+                #$ref: '#/components/schemas/Message'
+        400:
+          description: Invalid ID supplied.
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/INVALID_PARAMETER'
+                                           
+        404:
+          description: Invalid ID supplied.
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/USER_NOT_FOUND'
+
+
+  /group/{groupId}/{movie}: 
+    put:         #/group/{:groupId}/{movie}/put 
+      tags:
+        - Group
+      description: Edits the content of a group.
+      operationId: addMovieToGroup
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: Group ID that to be edited.
+          required: true
+          schema:
+            type: string
+        - name: movieID
+          in: path
+          description: ID of the movie to be added.
+          required: true
+          schema:
+            type: string
+        - name: token
+          in: path
+          description: Group token that to be edited.
+          required: true
+          schema:
+            type: string
+      requestBody: 
+       content:
+         application/json:
+          schema:
+            $ref: '#/components/schemas/Movie'
+          
+      responses:
+        '200':
+          description: OK
+        400:
+          description: Invalid ID supplied.
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/INVALID_PARAMETER'
+                                           
+        404:
+          description: Invalid ID supplied.
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/USER_NOT_FOUND'
+
+    delete:         #/group/{:groupId}/{movie}/delete 
+      tags:
+        - Group
+      description: Deletes a given movie from a given group.
+      operationId: deleteMovieFromGroup
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: Group ID that to be deleted.
+          required: true
+          schema:
+            type: string
+        - name: movieID
+          in: path
+          description: ID of the movie to be added.
+          required: true
+          schema:
+            type: string
+        - name: token
+          in: path
+          description: Group token that to be edited.
+          required: true
+          schema:
+            type: string
+      requestBody: 
+       content:
+         application/json:
+          schema:
+            $ref: '#/components/schemas/Movie'
+      responses:
+        '200':
+          description: Successfully eliminated movie from group.
+
+        400:
+          description: Invalid ID supplied.
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/INVALID_PARAMETER'
+                                           
+        404:
+          description: Invalid ID supplied.
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/USER_NOT_FOUND'
+
+components:
+  securitySchemes:
+    bearerAuth:            # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+
+  schemas:
+  
+    Movie:
+      required:
+      - id
+      - movieID
+      - token
+      
+      type: object
+      properties:
+        id:
+          type: string
+          description: Group ID that to be edited.
+        movieID:
+          type: integer
+          description: ID of the movie to be deleted.
+        token:
+          type: string
+          description: Group token that to be edited.
+        
+    Group:
+      required:
+      - name
+      - description
+      - token
+      type: object
+      properties:
+        name:
+          type: string
+          example: Comedy
+        description:
+          type: string
+          example: Comedy movies.
+        token:
+          type: string
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+
+    NewUser:
+      required:
+      - userName
+      - password
+      type: object
+      properties:
+        userName:
+          type: string
+          example: Maria
+        password:
+          type: string
+          example: xpto123
+
+
+############################################################################################
+    INVALID_PARAMETER:
+      type: object
+      properties:
+        error:
+          type: string
+          example: Invalid argument for ${argName}.
+
+    USER_NOT_FOUND:
+      type: object
+      properties:
+        error:
+          type: string
+          example: There isn't a user with the Id:${groupId}.
+    
+    GROUP_NOT_FOUND:
+      type: object
+      properties:
+        error:
+          type: string
+          example: There isn't a group with the Id:${groupId}.
+
+    MOVIE_NOT_FOUND:
+      type: object
+      properties:
+        error:
+          type: string
+          example: There isn't a movie with the Id:${groupId}.

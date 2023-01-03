@@ -1,0 +1,24 @@
+@import url(//fonts.googleapis.com/css?family=Vibur);
+body {
+  background: #112 url(//i.pinimg.com/originals/9b/90/54/9b9054150971a4db0607257436dcfcd9.jpg)fixed;
+  background-size:cover;
+  margin:10
+}
+.logo {
+  text-align: center;
+  width: 65%;
+  height: auto;
+  margin: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+   user-select: none;
+}
+
+.logo b{
+  font: 400 19vh "Vibur";
+  color: #ceff51;
+  text-shadow: 0 -40px 100px, 0 0 2px, 0 0 1em #ff4444, 0 0 0.5em #ff4444, 0 0 0.1em #ff4444, 0 10px 3px #000;
+}

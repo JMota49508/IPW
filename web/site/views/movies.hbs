@@ -1,0 +1,79 @@
+
+<!DOCTYPE html>
+    <html lang="en">
+        <head>
+            <meta charset="utf-8">
+            <title>Movies</title>
+            <link rel='stylesheet' type="text/css" href='/css/background.css'>
+            <link rel='stylesheet' type="text/css" href='/css/styles.css'>
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+        </head>
+        <body class="logo">
+            <b>CMDB API</b>
+            <ul class="home">
+            <li><a href="/"> HOME </a></li>
+            <li><a class="active" href="/movieSearch"> MOVIES </a></li>
+            </li>
+            <li class="dropdown">
+            <a class="dropbtn">GROUPS</a>
+            <div class="dropdown-content">
+                <a href="/groups">MY GROUPS</a>
+                <a href="/group">CREATE NEW GROUP</a>
+                <a href="/editGroup">EDIT GROUP</a>
+                <a href="/deleteGroup">DELETE GROUPS</a> 
+            </div>
+            </li>
+            <li style="float:right"><a  onclick="document.getElementById('id01').style.display='block'"> LOGIN </a></li>
+            <li style="float:right"><a  onclick="document.getElementById('id02').style.display='block'"> SIGN UP </a></li>
+            </ul>
+            <b style="font-size: 52px;">MOVIES</b>
+            <ul>
+                <form action="/movieHandler" method="GET" class="form_search">
+                    <label style="color:white" for="limit">Limit:</label>
+                    <input type="number" name="limit" value="250" min="1" max="250" required>
+                    <label style="color:white" for="name">Name:</label>
+                    <input type="text" name="name" value="">
+                    <input type="submit" value="Submit">
+                </form><br><br>
+            </ul>
+            <div id="id01" class="modal">
+                <form class="modal-content" action="/login" method="post">
+                    <div class="container">
+                        <p style="font-size: 36px;"><strong>Login to your account</strong></p>
+                        <input type="text" placeholder="Enter Username" name="username" required>
+                        <input type="password" placeholder="Enter Password" name="password" required>
+                        <label>
+                            <input type="checkbox" checked="checked" name="remember"> Remember me
+                        </label>
+                        <button type="submit">LOGIN</button>
+                    </div>
+                </form>
+            </div>
+            <div id="id02" class="modal">
+                <form class="modal-content" action="/signup" method="post">
+                <div class="container">
+                    <p style="font-size: 36px;"><strong>Create your account</strong></p>
+                    <input type="text" placeholder="Enter Username" name="username" required>
+                    <input type="password" placeholder="Enter Password" name="password" required>
+                    <button type="submit">SIGN UP</button>
+                </div>
+                </form>
+            </div>
+
+            <script>
+            // Get the modal
+            const modal = document.getElementById('id01');
+            const modal2 = document.getElementById('id02');
+
+            // When the user clicks anywhere outside of the modal, close it
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+                if (event.target == modal2) {
+                    modal2.style.display = "none";
+                }
+            }
+            </script>
+        </body>
+    </html>

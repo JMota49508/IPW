@@ -1,0 +1,14 @@
+{
+    "movieData" : [
+    { "id" : 1, "title" : "The Shawshank Redemption", "duration" : 144 },
+    { "id" : 2, "title" : "The Godfather", "duration" : 175 },
+    { "id" : 3, "title" : "The Dark Knight", "duration" : 152 },
+    { "id" : 4, "title" : "The Godfather Part II", "duration" : 202 },
+    { "id" : 5, "title" : "12 Angry Men", "duration" : 96 },
+    { "id" : 6, "title" : "Schindler's List", "duration" : 195 },
+    { "id" : 7, "title" : "The Lord of the Rings: The Return of the King", "duration" : 201 },
+    { "id" : 8, "title" : "Pulp Fiction", "duration" : 154 },
+    { "id" : 9, "title" : "The Lord of the Rings: The Fellowship of the Ring", "duration" : 178 },
+    { "id" : 10, "title" : "Il buono, il brutto, il cattivo", "duration" : 161 }
+    ]
+ }

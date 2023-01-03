@@ -1,0 +1,51 @@
+
+<!DOCTYPE html>
+  <html lang="en">
+    <head>
+      <meta charset="utf-8">
+      <title>GETMOVIES</title>
+      <link rel='stylesheet' type="text/css" href='/css/background.css'>
+      <link rel='stylesheet' type="text/css" href='/css/styles.css'>
+    </head>
+    <style>
+        .rectangle{
+            width: auto;
+            height: 515px;
+            background: lightslategray;
+        }
+    </style>
+    <body class="logo">
+        <b>CMDB API</b>
+        <ul class="home">
+            <li><a href="/"> HOME </a></li>
+            <li><a class="active" href="/movieSearch"> MOVIES </a></li>
+            <li class="dropdown">
+                <a class="dropbtn">GROUPS</a>
+                <div class="dropdown-content">
+                <a href="/groups">MY GROUPS</a>
+                <a href="/group">CREATE NEW GROUP</a>
+                <a href="/editGroup">EDIT GROUP</a>
+                <a href="/deleteGroup">DELETE GROUPS</a> 
+                </div>
+            </li>
+            <li style="float:right"><a href="/signout"> SIGN OUT </a></li>
+            <li style="float:right"><a> WELCOME, {{data.user.name}} </a></li>
+        </ul>
+        <div class="rectangle">
+            <img style="box-shadow: 0px 0px 5px #fff; padding:7px;float:left;" src={{data.movies.image}} alt={{data.movies.title}} width="300" height="500">
+            <p style="color: black;font-size: 22px;">Title : {{data.movies.title}}</p>
+            <p style="color: black;font-size: 22px;">Plot : {{data.movies.plot}}</p>
+            <p style="color: black;font-size: 22px;">Genre : {{data.movies.genres}}</p>
+            <p style="color: black;font-size: 22px;">TimeElapsed : {{data.movies.runtimeMins}} mins</p>
+            <p style="color: black;font-size: 22px;">Directors : {{data.movies.directors}}</p>
+            <p style="color: black;font-size: 22px;">Stars : {{data.movies.stars}}</p>
+            <form action="/addMovieToGroup" method="POST" class="form_search">
+                <input type="hidden" name="movieId" value="{{data.movies.id}}">
+                <label for="groupId">Choose a group(by Id):</label>
+                <input type="text" name="groupId" value="" maxlength="4" size="1">
+                    <input type="submit" value="ADD TO GROUP">
+            </form>
+        </div>
+    </body>
+  </html>
+

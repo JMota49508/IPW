@@ -1,0 +1,44 @@
+
+<!DOCTYPE html>
+  <html lang="en">
+    <head>
+      <meta charset="utf-8">
+      <title>MY GROUPS</title>
+      <link rel='stylesheet' type="text/css" href='/css/background.css'>
+      <link rel='stylesheet' type="text/css" href='/css/styles.css'>
+    </head>
+    <body class="logo">
+      <b>CMDB API</b>
+      <ul class="home">
+        <li><a href="/"> HOME </a></li>
+        <li><a href="/movieSearch"> MOVIES </a></li>
+        </li>
+        <li class="dropdown">
+          <a class="dropbtn">GROUPS</a>
+          <div class="dropdown-content">
+              <a href="/groups">MY GROUPS</a>
+              <a href="/group">CREATE NEW GROUP</a>
+              <a href="/editGroup">EDIT GROUP</a>
+              <a href="/deleteGroup">DELETE GROUPS</a> 
+          </div>
+        </li>
+        <li style="float:right"><a href="/signout"> SIGN OUT </a></li>
+        <li style="float:right"><a> WELCOME, {{data.user.name}} </a></li>
+        </ul>
+        <ul>
+          <p style="color: yellow;font-size:22px;font-weight:bold;">ID: {{data.group.id}}</p>
+          <p style="color: yellow;font-size:22px;font-weight:bold;">Name: {{data.group.name}}</p>
+          <p style="color: yellow;font-size:22px;font-weight:bold;">Description: {{data.group.description}}</p>
+          <p style="color: yellow;font-size:22px;font-weight:bold;">Duration: {{data.group.totalDuration}} Mins</p>
+          <p style="color: yellow;font-size:22px;font-weight:bold;">Movies:</p>
+          {{#each data.group.movies}}
+            <p style="color:white;font-size:22px;"><a style="color:white" href="/movie/{{id}}">{{title}}</a></p>
+          {{/each}}
+          <form action="/deleteGroupInternal" method="POST">
+          <input type="hidden" name="groupId" value="{{data.group.id}}">
+          <button name="subject" type="submit">DELETE GROUP</button></form>
+          <form action="/deleteMoviePage/{{data.group.id}}" method="GET">
+          <button name="subject" type="submit">DELETE MOVIE FROM GROUP</button></form>
+        </ul>
+    </body>
+  </html>

@@ -1,0 +1,39 @@
+
+<!DOCTYPE html>
+    <html lang="en">
+        <head>
+        <meta charset="utf-8">
+        <title>Movies</title>
+        <link rel='stylesheet' type="text/css" href='/css/background.css'>
+        <link rel='stylesheet' type="text/css" href='/css/styles.css'>
+    </head>
+        <body class="logo">
+            <b>CMDB API</b>
+            <ul class="home">
+            <li><a href="/"> HOME </a></li>
+            <li><a class="active" href="/movieSearch"> MOVIES </a></li>
+            </li>
+            <li class="dropdown">
+            <a class="dropbtn">GROUPS</a>
+            <div class="dropdown-content">
+                <a href="/groups">MY GROUPS</a>
+                <a href="/group">CREATE NEW GROUP</a>
+                <a href="/editGroup">EDIT GROUP</a>
+                <a href="/deleteGroup">DELETE GROUPS</a> 
+            </div>
+            </li>
+            <li style="float:right"><a href="/signout"> SIGN OUT </a></li>
+            <li style="float:right"><a> WELCOME, {{user.name}} </a></li>
+            </ul>
+            <b style="font-size: 52px;">MOVIES</b>
+            <ul>
+                <form action="/movieHandler" method="GET" class="form_search">
+                        <label style="color:white" for="limit">Limit:</label>
+                        <input type="number" name="limit" value="250" min="1" max="250" required>
+                        <label style="color:white" for="name">Name:</label>
+                        <input type="text" name="name" value="">
+                        <input type="submit" value="Submit">
+                </form><br><br>
+            </ul>
+        </body>
+    </html>
