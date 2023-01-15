@@ -1,6 +1,6 @@
 
 import toHttpResponse from '../api/response-errors.mjs'
-import errors from '../../errors.mjs';
+import errors from '../../errors.mjs'
 
 export default function (services) {
     if(!services) throw errors.INVALID_PARAMETER('services')
