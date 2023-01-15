@@ -7,6 +7,13 @@
       <link rel='stylesheet' type="text/css" href='/css/background.css'>
       <link rel='stylesheet' type="text/css" href='/css/styles.css'>
     </head>
+    <style>
+        .rectangle{
+            width: auto;
+            height: auto;
+            background: lightslategray;
+        }
+    </style>
     <body class="logo">
       <b>CMDB API</b>
       <ul class="home">
@@ -23,10 +30,10 @@
           </div>
         </li>
         <li style="float:right"><a href="/signout"> SIGN OUT </a></li>
-        <li style="float:right"><a> WELCOME, {{data.user.name}} </a></li>
-        </ul>
-        <ul>
-          <p style="color: yellow;font-size:22px;font-weight:bold;">ID: {{data.group.id}}</p>
+        <li style="float:right"><a href="/profile"> WELCOME, {{data.user.name}} </a></li>
+      </ul>
+      <div class="rectangle">
+        <b style="font-size: 52px;">Group {{data.group.id}} Details</b>
           <p style="color: yellow;font-size:22px;font-weight:bold;">Name: {{data.group.name}}</p>
           <p style="color: yellow;font-size:22px;font-weight:bold;">Description: {{data.group.description}}</p>
           <p style="color: yellow;font-size:22px;font-weight:bold;">Duration: {{data.group.totalDuration}} Mins</p>
@@ -34,11 +41,35 @@
           {{#each data.group.movies}}
             <p style="color:white;font-size:22px;"><a style="color:white" href="/movie/{{id}}">{{title}}</a></p>
           {{/each}}
-          <form action="/deleteGroupInternal" method="POST">
-          <input type="hidden" name="groupId" value="{{data.group.id}}">
-          <button name="subject" type="submit">DELETE GROUP</button></form>
-          <form action="/deleteMoviePage/{{data.group.id}}" method="GET">
-          <button name="subject" type="submit">DELETE MOVIE FROM GROUP</button></form>
-        </ul>
+          <input id="groupId" type="hidden" value="{{data.group.id}}">
+          <p hidden><input id="token" type="text" value={{data.user.token}}></p>
+          <p><button id="btn_delete">DELETE GROUP</button></p>
+          <form action="/deleteMoviePage/{{data.group.id}}" method="GET"><button name="subject" type="submit">DELETE MOVIE FROM GROUP</button></form>
+      </div>
+      <script>
+        window.addEventListener('load', loadHandler)
+        function loadHandler(){
+          const buttonsDelete = document.querySelector('#btn_delete')
+          buttonsDelete.addEventListener('click', deleteTaskHandler)
+        }
+        function deleteTaskHandler(){
+          const token = document.querySelector('#token').value
+          const groupID = document.querySelector('#groupId').value
+          const options = {
+            method : "DELETE",
+            headers : {
+              "Authorization": 'Bearer ' + token,  //accessToken contain bearer value.
+              "Accept" : "application/json"
+            }
+          }
+          fetch(`/api/group/${groupID}`, options)
+          .then(rsp =>{
+            if(rsp.status==400)  return Promise.reject("Unauthorize") 
+            return rsp.json()
+          })
+          .then(document.location.href=`/groups`)
+          .catch(error => console.log(error))
+        }
+      </script>
     </body>
   </html>

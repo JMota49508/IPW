@@ -13,16 +13,28 @@
                 background-size:cover;
                 margin:10
             }
+            .block {
+                width: 50%;
+                border: none;
+                background-color: #04AA6D;
+                color: white;
+                padding: 14px 28px;
+                font-size: 16px;
+                cursor: pointer;
+                text-align: center;
+            }
         </style>
     </head>
     <body>
         <audio autoplay>
             <source src="error.mp3" type="audio/mpeg">
         </audio>
+        <div style="text-align:center;">
         <p style="color:aliceblue;text-align:center;font-size:80px;">(ㆆ_ㆆ)</p>
         <p style="color:aliceblue;text-align:center;font-size:40px;">An Error has occured</p>
         <p style="color:aliceblue;text-align:center;font-size:40px;">{{response.status}}</p>
         <p style="color:aliceblue;text-align:center;font-size:40px;">{{response.body}}</p>
+        <form action="/"><button class="block" type="submit">HOME PAGE</button></form></div>
     </body>
   </html>
 

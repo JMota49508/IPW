@@ -1,0 +1,45 @@
+
+<!DOCTYPE html>
+  <html lang="en">
+    <head>
+      <meta charset="utf-8">
+      <title>PROFILE</title>
+      <link rel='stylesheet' type="text/css" href='/css/background.css'>
+      <link rel='stylesheet' type="text/css" href='/css/styles.css'>
+    </head>
+    <style>
+        .rectangle{
+            width: auto;
+            height: auto;
+            background: lightslategray;
+        }
+    </style>
+    <body class="logo">
+      <b>CMDB API</b>
+      <ul class="home">
+        <li><a href="/"> HOME </a></li>
+        <li><a href="/movieSearch"> MOVIES </a></li>
+        </li>
+        <li class="dropdown">
+          <a class="dropbtn">GROUPS</a>
+          <div class="dropdown-content">
+                <a href="/groups">MY GROUPS</a>
+                <a href="/group">CREATE NEW GROUP</a>
+                <a href="/editGroup">EDIT GROUP</a>
+                <a href="/deleteGroup">DELETE GROUPS</a> 
+          </div>
+        </li>
+          <li style="float:right"><a href="/signout"> SIGN OUT </a></li>
+          <li style="float:right"><a> WELCOME, {{data.user.name}} </a></li>
+      </ul>
+      <b style="font-size: 52px;">Profile</b>
+      <div class="rectangle">
+            <p style="color: black;font-size: 22px;">Username : {{data.user.name}}</p>
+            <p style="color: black;font-size: 22px;">Token : {{data.user.token}}</p>
+            <p style="color: black;font-size: 22px;">Next Group Id : {{data.user.nextGroupId}}</p>
+            <form action="/deleteUser" method="POST" class="form_search">
+                <input type="submit" value="DELETE USER">
+            </form>
+        </div>
+    </body>
+  </html>

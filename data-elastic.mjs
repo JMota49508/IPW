@@ -39,12 +39,13 @@ async function getUser(token){
     .then(body=> body.hits.hits[0]._source )
 }
 
-function getUsers(){
+async function getUsers(){
     return fetch(baseURL + `users/_search`,{
         headers:{ "Accept":"application/json" }
-        .then(rsp=> rsp.json())
-        .then(body=> body.hits.hits.map(u=>{ return { id:u._id, user:u._source } }))
     })
+    .then(rsp=> rsp.json())
+    .then(body=> body.hits.hits.map(u=>{ return { id:u._id, user:u._source } }))
+    
 }
 
 async function loginUser(username,password){
@@ -55,6 +56,17 @@ async function loginUser(username,password){
     .then(body=> body.hits.hits[0]._source)
 }
 
+async function deleteUser(token){
+    const id = await getId(token)
+    return await fetch(baseURL + `users/_doc/${id}?refresh=wait_for`,{
+        method: "DELETE",
+        headers:{ 
+            "Content-Type":"application/json",
+            "Accept":"application/json"
+        }
+    })
+    .then (rsp=> rsp.json())
+}
 
 async function createGroup(name,desc,user,token){
     const aux = user
@@ -69,7 +81,7 @@ async function createGroup(name,desc,user,token){
             groups:aux.groups
         }
     }
-    return await fetch(baseURL + `users/_update/${id}`,{
+    return await fetch(baseURL + `users/_update/${id}?refresh=wait_for`,{
         method: "POST",
         body: JSON.stringify(body),
         headers:{ 
@@ -94,8 +106,14 @@ async function editGroup(id,name,desc,user,token){
     const _id = await getId(token)
     aux.map(g=>{
         if(g.id==id){
-            g.name=name
-            g.description=desc
+            if(desc && name){
+                g.name=name
+                g.description=desc
+            }else if(!desc){
+                g.name=name
+            } else if(!name){
+                g.description=desc
+            }
         }
     })
     const body = {
@@ -103,7 +121,7 @@ async function editGroup(id,name,desc,user,token){
             groups:aux
         }
     }
-    return await fetch(baseURL + `users/_update/${_id}`,{
+    return await fetch(baseURL + `users/_update/${_id}?refresh=wait_for`,{
         method: "POST",
         body: JSON.stringify(body),
         headers:{ 
@@ -125,7 +143,7 @@ async function deleteGroup(id,user,token){
             groups:aux
         }
     }
-    return await fetch(baseURL + `users/_update/${_id}`,{
+    return await fetch(baseURL + `users/_update/${_id}?refresh=wait_for`,{
         method: "POST",
         body: JSON.stringify(body),
         headers:{ 
@@ -152,7 +170,7 @@ async function addMovieToGroup(id,movId,user,token){
             groups:aux
         }
     }
-    return await fetch(baseURL + `users/_update/${_id}`,{
+    return await fetch(baseURL + `users/_update/${_id}?refresh=wait_for`,{
         method: "POST",
         body: JSON.stringify(body),
         headers:{ 
@@ -179,7 +197,7 @@ async function deleteMovieFromGroup(id,movId,user,token){
             groups:aux
         }
     }
-    return await fetch(baseURL + `users/_update/${_id}`,{
+    return await fetch(baseURL + `users/_update/${_id}?refresh=wait_for`,{
         method: "POST",
         body: JSON.stringify(body),
         headers:{ 
@@ -205,6 +223,7 @@ export const userData ={
     getUser,
     getUsers,
     loginUser,
+    deleteUser,
     createGroup,
     getGroups,
     getGroupById,

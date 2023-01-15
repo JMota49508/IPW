@@ -29,7 +29,7 @@
                 </div>
             </li>
             <li style="float:right"><a href="/signout"> SIGN OUT </a></li>
-            <li style="float:right"><a> WELCOME, {{data.user.name}} </a></li>
+            <li style="float:right"><a href="/profile"> WELCOME, {{data.user.name}} </a></li>
         </ul>
         <div class="rectangle">
             <img style="box-shadow: 0px 0px 5px #fff; padding:7px;float:left;" src={{data.movies.image}} alt={{data.movies.title}} width="300" height="500">
@@ -39,13 +39,41 @@
             <p style="color: black;font-size: 22px;">TimeElapsed : {{data.movies.runtimeMins}} mins</p>
             <p style="color: black;font-size: 22px;">Directors : {{data.movies.directors}}</p>
             <p style="color: black;font-size: 22px;">Stars : {{data.movies.stars}}</p>
-            <form action="/addMovieToGroup" method="POST" class="form_search">
-                <input type="hidden" name="movieId" value="{{data.movies.id}}">
-                <label for="groupId">Choose a group(by Id):</label>
-                <input type="text" name="groupId" value="" maxlength="4" size="1">
-                    <input type="submit" value="ADD TO GROUP">
-            </form>
+            
+            <p hidden><input type="text" id="movieId" value="{{data.movies.id}}"></p>
+            <p hidden><input id="token" type="text" value={{data.user.token}}></p>
+            <p><label>Choose a group(by Id):</label><input type="text" id="groupId" value="" maxlength="4" size="1"></p>
+            <p><button id="btn_update">ADD TO GROUP</button></p>
         </div>
+        <script>
+            window.addEventListener('load',loadHandler)
+            function loadHandler(){
+                const buttonUpdate = document.querySelector('#btn_update')
+                buttonUpdate.addEventListener('click',updateGroupHandler)
+            }
+            function updateGroupHandler(){
+                const token = document.querySelector('#token').value
+                const groupID = document.querySelector('#groupId').value
+                const movieID = document.querySelector('#movieId').value
+                const options = {
+                    method : "PUT",
+                    headers : {
+                        "Authorization": 'Bearer ' + token,  //accessToken contain bearer value.
+                        "Content-Type" : "application/json",
+                        "Accept" : "application/json"
+                    }
+                }
+                fetch(`/api/group/${groupID}/${movieID}`,options)
+                .then(rsp =>{
+                    if(rsp.status==400)  return Promise.reject("Unauthorize") 
+                    return rsp.json() 
+                })
+                .then(document.location.href=`/group/${groupID}`)
+                .catch(error => {
+                    console.log(error)
+                })
+            }
+            </script>
     </body>
   </html>
 

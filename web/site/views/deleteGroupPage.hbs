@@ -2,10 +2,10 @@
 <!DOCTYPE html>
     <html lang="en">
         <head>
-        <meta charset="utf-8">
-        <title>Movies</title>
+        <title>DELETE GROUP</title>
         <link rel='stylesheet' type="text/css" href='/css/background.css'>
         <link rel='stylesheet' type="text/css" href='/css/styles.css'>
+        <meta charset="utf-8">
     </head>
         <body class="logo">
             <b>CMDB API</b>
@@ -23,15 +23,36 @@
             </div>
             </li>
             <li style="float:right"><a href="/signout"> SIGN OUT </a></li>
-            <li style="float:right"><a> WELCOME, {{data.name}} </a></li>
+            <li style="float:right"><a href="/profile"> WELCOME, {{data.name}} </a></li>
             </ul>
             <b style="font-size: 52px;">Delete Group</b>
-            <ul>
-                <form action="/deleteGroupInternal" method="POST" class="form_search">
-                    <label style="color:white" for="groupId">Group ID:</label>
-                    <input type="number" name="groupId" value="" min="1">
-                    <input type="submit" value="Delete Group">
-                </form><br><br>
-            </ul>
+            <p hidden><input id="token" type="text" value={{data.token}}></p>
+            <p style="color:white">Group ID: <input id="groupId" type="number" value="" min="1"></p>
+            <p><button id="btn_delete">DELETE GROUP</button></p>
+            <script>
+                window.addEventListener('load', loadHandler)
+                function loadHandler(){
+                    const buttonsDelete = document.querySelectorAll('#btn_delete')
+                    buttonsDelete.forEach(b => b.addEventListener('click', deleteTaskHandler))
+                }
+                function deleteTaskHandler(){
+                    const token = document.querySelector('#token').value
+                    const groupID = document.querySelector('#groupId').value
+                    const options = {
+                        method : "DELETE",
+                        headers : {
+                            "Authorization": 'Bearer ' + token,  //accessToken contain bearer value.
+                            "Accept" : "application/json"
+                        }
+                    }
+                    fetch(`/api/group/${groupID}`, options)
+                    .then(rsp =>{
+                        if(rsp.status==400) return Promise.reject("Unauthorize") 
+                        return rsp.json()
+                    })
+                    .then(document.location.href=`/groups`)
+                    .catch(error => console.log(error))
+                }
+            </script>
         </body>
     </html>

@@ -2,40 +2,68 @@
 <!DOCTYPE html>
     <html lang="en">
         <head>
-        <meta charset="utf-8">
-        <title>Movies</title>
+        <title>EDIT GROUPS</title>
         <link rel='stylesheet' type="text/css" href='/css/background.css'>
         <link rel='stylesheet' type="text/css" href='/css/styles.css'>
-    </head>
+        <meta charset="utf-8">
+        </head>
         <body class="logo">
             <b>CMDB API</b>
             <ul class="home">
-            <li><a href="/"> HOME </a></li>
-            <li><a href="/movieSearch"> MOVIES </a></li>
-            </li>
-            <li class="dropdown">
-            <a  class="active" class="dropbtn">GROUPS</a>
-            <div class="dropdown-content">
-                <a href="/groups">MY GROUPS</a>
-                <a href="/group">CREATE NEW GROUP</a>
-                <a href="/editGroup">EDIT GROUP</a>
-                <a href="/deleteGroup">DELETE GROUPS</a> 
-            </div>
-            </li>
-            <li style="float:right"><a href="/signout"> SIGN OUT </a></li>
-            <li style="float:right"><a> WELCOME, {{data.name}} </a></li>
+                <li><a href="/"> HOME </a></li>
+                <li><a href="/movieSearch"> MOVIES </a></li>
+                <li class="dropdown">
+                    <a  class="active" class="dropbtn">GROUPS</a>
+                    <div class="dropdown-content">
+                        <a href="/groups">MY GROUPS</a>
+                        <a href="/group">CREATE NEW GROUP</a>
+                        <a href="/editGroup">EDIT GROUP</a>
+                        <a href="/deleteGroup">DELETE GROUPS</a> 
+                    </div>
+                </li>
+                <li style="float:right"><a href="/signout"> SIGN OUT </a></li>
+                <li style="float:right"><a href="/profile"> WELCOME, {{data.name}} </a></li>
             </ul>
             <b style="font-size: 52px;">Edit Group</b>
-            <ul>
-                <form action="/editGroupInternal" method="POST" class="form_search">
-                        <label style="color:white" for="groupId">Group ID:</label>
-                        <input type="number" name="groupId" value="" min="1">
-                        <p><label style="color:white" for="newName">New Name:</label>
-                        <input type="text" name="newName" value=""></p>
-                        <p><label style="color:white" for="newDescription">New Description:</label>
-                        <textarea type="text" name="newDescription"></textarea></p>
-                        <input type="submit" value="Edit Group">
-                </form><br><br>
-            </ul>
+            <p hidden><input id="token" type="text" value={{data.token}}></p>
+            <p style="color:white">Group ID: <input id="groupId" type="number" value="" min="1"></p>
+            <p style="color:white">New Name: <input id="name" type="text" value=""></p>
+            <p style="color:white">New Description: <input id="desc" type="text" value=""></p>
+            <p><button id="btn_update">COMMIT CHANGES</button></p>
+            <script>
+                window.addEventListener('load',loadHandler)
+                function loadHandler(){
+                    const buttonUpdate = document.querySelector('#btn_update')
+                    buttonUpdate.addEventListener('click',updateGroupHandler)
+                }
+                function updateGroupHandler(){
+                    const token = document.querySelector('#token').value
+                    const groupID = document.querySelector('#groupId').value
+                    const groupName = document.querySelector('#name').value
+                    const groupDescription = document.querySelector('#desc').value
+                    const options = {
+                        method : "PUT",
+                        headers : {
+                            "Authorization": 'Bearer ' + token,  //accessToken contain bearer value.
+                            "Content-Type" : "application/json",
+                            "Accept" : "application/json"
+                        },
+                        body : JSON.stringify({
+                            groupId: groupID,
+                            newName : groupName,
+                            newDescription : groupDescription
+                        })
+                    }
+                    fetch(`/api/editGroup`,options)
+                    .then(rsp =>{
+                        if(rsp.status==400)  return Promise.reject("Unauthorize") 
+                        return rsp.json() 
+                    })
+                    .then(document.location.href=`/group/${groupID}`)
+                    .catch(error => {
+                        console.log(error)
+                    })
+                }
+            </script>
         </body>
     </html>

@@ -7,6 +7,13 @@
       <link rel='stylesheet' type="text/css" href='/css/background.css'>
       <link rel='stylesheet' type="text/css" href='/css/styles.css'>
     </head>
+    <style>
+        .rectangle{
+            width: auto;
+            height: auto;
+            background: lightslategray;
+        }
+    </style>
     <body class="logo">
       <b>CMDB API</b>
       <ul class="home">
@@ -23,15 +30,15 @@
           </div>
         </li>
           <li style="float:right"><a href="/signout"> SIGN OUT </a></li>
-          <li style="float:right"><a> WELCOME, {{data.user.name}} </a></li>
+          <li style="float:right"><a href="/profile"> WELCOME, {{data.user.name}} </a></li>
       </ul>
-      <b style="font-size: 52px;">My Groups</b>
-      <ul>
+      <div class="rectangle">
+        <b style="font-size: 52px;">My Groups</b>
             {{#each data.groups}}
-                <p><a style="color:rgb(241, 28, 135);font-size:36px;font-weight:bolder;" href="/group/{{id}}">{{name}}</a></p>
-                <p style="color: yellow;font-size:22px;font-weight:bold;">Description: {{description}}</p>
-                <p style="color: yellow;font-size:22px;font-weight:bold;">Duration: {{totalDuration}} Mins</p>
+                <p><a style="color:Black;font-size:36px;font-weight:bolder;" href="/group/{{id}}">{{name}}</a></p>
+                <p style="color: white;font-size:22px;font-weight:bold;">Description: {{description}}</p>
+                <p style="color: white;font-size:22px;font-weight:bold;">Duration: {{totalDuration}} Mins</p>
             {{/each}}
-      </ul> 
+      </div> 
     </body>
   </html>

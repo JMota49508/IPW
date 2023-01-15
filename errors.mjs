@@ -19,10 +19,10 @@ export default {
             message:`User not found`
         }
     },
-    MOVIE_NOT_FOUND: movId => {
+    MOVIE_NOT_FOUND: () => {
         return{
             code:3,
-            message:`There isn't a movie with the Id:${movId}`
+            message:`Movie not Found`
         }
     },
     MOVIE_NOT_PRESENT: () => {
@@ -43,10 +43,22 @@ export default {
             message: `There is a group with that name already`
         }
     },
+    SAME_NAME_USER: () => {
+        return{
+            code: 1,
+            message: `There is a user with that name already`
+        }
+    },
     NOT_LOGGED_IN: () => {
         return{
             code: 2,
             message: `Please login or sign up before using the features of the API`
+        }
+    },
+    LOGIN_FAILED: () => {
+        return{
+            code:1,
+            message: `There isn't an account with those parameters`
         }
     }
 }

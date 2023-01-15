@@ -13,6 +13,7 @@ export default function(movieData,userData){
         getUsers: getUsers,
         getUser: getUser,
         login: login,
+        deleteUser: deleteUser,
         getMovies: getMovies,
         getMoviesByName: getMoviesByName,
         getMovie: getMovie,
@@ -27,6 +28,8 @@ export default function(movieData,userData){
     async function createUser(username,password){
     if(!username) throw errors.INVALID_PARAMETER("username")
     if(!password) throw errors.INVALID_PARAMETER("password")
+    const users = await userData.getUsers()
+    if(users.find(u=>u.user.name==username)!=undefined) throw errors.SAME_NAME_USER()
     return userData.createUser(username,password)
     }
     async function getUsers(){
@@ -39,25 +42,38 @@ export default function(movieData,userData){
     async function login(username,password){
         if(!username) throw errors.INVALID_PARAMETER("username")
         if(!password) throw errors.INVALID_PARAMETER("password")
-        return userData.loginUser(username,password)
+        const users = await userData.getUsers()
+        if(users.find(u=>u.user.name==username)==undefined) throw errors.LOGIN_FAILED()
+        const user = await userData.loginUser(username,password)
+        if(user.password!=password) throw errors.LOGIN_FAILED()
+        return user
+    }
+    async function deleteUser(token){
+        return userData.deleteUser(token)
     }
     async function getMovies(limit=250){
         limit = Number(limit)
         if(isNaN(limit)) {
             throw errors.INVALID_PARAMETER(`limit`)
         }
-        return await movieData.getMovies(limit)
+        const movie = await movieData.getMovies(limit)
+        if(!movie) throw errors.MOVIE_NOT_FOUND()
+        return movie
     }
     async function getMoviesByName(q,limit=250){
         limit = Number(limit)
         if(isNaN(limit)) {
             throw errors.INVALID_PARAMETER(`limit`)
         }
-        return await movieData.getMoviesByName(q,limit)
+        const movie = await movieData.getMoviesByName(q,limit)
+        if(!movie) throw errors.MOVIE_NOT_FOUND()
+        return movie
     }
     async function getMovie(movId){
-        if(!movId) throw errors.INVALID_PARAMETER(`limit`)
-        return await movieData.getMovie(movId)
+        if(!movId) throw errors.INVALID_PARAMETER(`movId`)
+        const movie = await movieData.getMovie(movId)
+        if(!movie) throw errors.MOVIE_NOT_FOUND()
+        return movie
     }
     async function getGroups(token){
         let user = userData.getUser(token)

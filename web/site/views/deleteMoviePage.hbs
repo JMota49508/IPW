@@ -29,19 +29,46 @@
               <a href="/deleteGroup">DELETE GROUPS</a> 
           </div>
         </li>
-        <li style="float:right"><a  href="/login"> LOGIN </a></li>
-        <li style="float:right"><a  href="/createUser"> SIGN UP </a></li>
-        </ul>
+        <li style="float:right"><a href="/signout"> SIGN OUT </a></li>
+        <li style="float:right"><a href="/profile"> WELCOME, {{data.user.name}} </a></li>
+      </ul>
         <div class="rectangle">
-            <b style="font-size: 52px;">Remove Movie From Group: {{data.name}}</b>
-            <form action="/deleteMovieFromGroup/{{data.id}}" method="POST" class="form_search">
-                <label style="color:white;font-size:22px;" for="movie">Choose the movie you want to delete:</label>
-                <select name="movie" id="movie">
-                    {{#each data.movies}}
-                        <option value="{{id}}">{{title}}</option>
-                    {{/each}}
-                </select>
-                <p><button name="subject" type="submit">DELETE MOVIE FROM GROUP</button></form></p>
+            <b style="font-size: 52px;">Remove Movie From Group: {{data.group.name}}</b>
+            <p><label style="color:white;font-size:22px;" for="movie">Choose the movie you want to delete:</label>
+            <select name="movie" id="movie">
+              {{#each data.group.movies}}
+                <option value="{{id}}">{{title}}</option>
+              {{/each}}
+            </select></p>
+            <p hidden><input id="token" type="text" value={{data.user.token}}></p>
+            <p hidden><input id="groupId" type="number" value={{data.group.id}}></p>
+            <p><button id="btn_delete">DELETE MOVIE FROM GROUP</button></p>
+            <script>
+                window.addEventListener('load', loadHandler)
+                function loadHandler(){
+                    const buttonsDelete = document.querySelector('#btn_delete')
+                    buttonsDelete.addEventListener('click', deleteTaskHandler)
+                }
+                function deleteTaskHandler(){
+                    const token = document.querySelector('#token').value
+                    const groupID = document.querySelector('#groupId').value
+                    const movieID = document.querySelector('#movie').value
+                    const options = {
+                        method : "DELETE",
+                        headers : {
+                            "Authorization": 'Bearer ' + token,  //accessToken contain bearer value.
+                            "Accept" : "application/json"
+                        }
+                    }
+                    fetch(`/api/group/${groupID}/${movieID}`, options)
+                    .then(rsp =>{
+                        if(rsp.status==400) return Promise.reject("Unauthorize") 
+                        return rsp.json()
+                    })
+                    .then(document.location.href=`/group/${groupID}`)
+                    .catch(error => console.log(error))
+                }
+            </script>
             </form>
         </div>
     </body>
