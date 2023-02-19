@@ -5,10 +5,8 @@ import express from 'express'
 import { assert,expect } from 'chai';
 
 import data from '../cmdb-data-mem.mjs'
-import servicesInit from '../cmdb-services-api.mjs'
-import webapiInit from '../cmdb-web-api.mjs'
-
-//TODO setup function
+import servicesInit from '../cmdb-services-mem.mjs'
+import webapiInit from '../cmdb-web-api-test.mjs'
 
 const services = servicesInit(data.dataMovies,data.dataUsers)
 const webapi = webapiInit(services)
@@ -19,11 +17,12 @@ const app = express()
 
 app.use(express.json())
 
+app.get("/profile",webapi.profile)
 app.post("/user",webapi.createUser)
-app.get("/user",webapi.getUsers)
 
 app.get("/movie",webapi.getMovies)
 app.get("/getMovie",webapi.getMoviesByName)
+app.get("/getMovie/:movieId",webapi.getMovie)
 
 app.get("/group", webapi.getGroups)
 app.get("/group/:groupId", webapi.getGroupById)
@@ -34,32 +33,28 @@ app.put("/group/:groupId/movie",webapi.addMovieToGroup)
 app.delete("/group/:groupId/movie",webapi.deleteMovieFromGroup)
 
 describe('Users Tests API', ()=>{
-    it('Get Users in API', () => {
+    it('Get User Profile in API', () => {
         return request(app)
-            .get('/user')
+            .get('/profile')
             .set('Accept', 'application/json')
             .set('Content-Type', 'application/json')
             .set('Authorization', `Bearer ${token}`)
             .expect(200)
-            .then(rsp=>expect(rsp.body).deep.equal([
-                { id: 1, name:"João Mota", password:"G10-IPW1",token: "1c884cbc-204f-4dc7-9b37-0555275ea3e7",nextGroupId:1,groups:[] },
-                { id: 2, name:"Gonçalo Pinto", password:"G10-IPW2",token: "bf4f490b-a408-4b29-a033-6aa6d4364e92",nextGroupId:1,groups:[] },
-                { id: 3, name:"Frederico Cerqueira", password:"G10-IPW3",token: "0263bfee-7a78-41b4-9fbf-c8daa87a590a",nextGroupId:1,groups:[] }
-            ]))
+            .then(rsp=>expect(rsp.body).deep.equal(
+                { id: 1, name:"João Mota", password:"G10-IPW1",token: "1c884cbc-204f-4dc7-9b37-0555275ea3e7",nextGroupId:1,groups:[] }))
     })
     it('Create User in API', () => {
         return request(app)
             .post('/user')
             .set('Accept', 'application/json')
             .set('Content-Type', 'application/json')
-            .set('Authorization', `Bearer ${token}`)
             .send({username:"António Silva",password:"testpassword"})
             .expect(201)
             .then(rsp=>{
-                assert.isTrue(rsp.body.newUser.id > 3)
-                assert.isTrue(rsp.body.newUser.name == "António Silva")
-                assert.isTrue(rsp.body.newUser.password == "testpassword")
-                assert.isTrue(rsp.body.newUser.token.length > 0)
+                assert.isTrue(rsp.body.id > 2)
+                assert.isTrue(rsp.body.name == "António Silva")
+                assert.isTrue(rsp.body.password == "testpassword")
+                assert.isTrue(rsp.body.token.length > 0)
             })
     })
 })
@@ -71,7 +66,6 @@ describe('Movie Tests API', ()=>{
             .set('Accept', 'application/json')
             .set('Content-Type', 'application/json')
             .set('Authorization', `Bearer ${token}`)
-            .expect(200)
             .then(rsp=> expect(rsp.body).deep.equal([
                 { "id" : 1, "title" : "The Shawshank Redemption", "duration" : 144 },
                 { "id" : 2, "title" : "The Godfather", "duration" : 175 },
@@ -123,6 +117,17 @@ describe('Movie Tests API', ()=>{
                 { "id" : 2, "title" : "The Godfather", "duration" : 175 }
             ]))
     })
+    it('Get Movie By Id', () => {
+        return request(app)
+            .get('/getMovie/2')
+            .set('Accept', 'application/json')
+            .set('Content-Type', 'application/json')
+            .set('Authorization', `Bearer ${token}`)
+            .expect(200)
+            .then(rsp=> expect(rsp.body).deep.equal(
+                { "id" : 2, "title" : "The Godfather", "duration" : 175 }
+            ))
+    })
 })
 
 describe('Group Tests API', ()=>{
@@ -134,7 +139,7 @@ describe('Group Tests API', ()=>{
             .set('Authorization', `Bearer ${token}`)
             .send({name:"test1",description:"group test1"})
             .expect(201)
-            .then(rsp=> expect(rsp.body.group).deep.equal({
+            .then(rsp=> expect(rsp.body).deep.equal({
                 id:1,
                 name:"test1",
                 description:"group test1",
@@ -177,7 +182,7 @@ describe('Group Tests API', ()=>{
             .set('Authorization', `Bearer ${token}`)
             .send({newName:"testedit",newDescription:"group testedit"})
             .expect(202)
-            .then(rsp=> expect(rsp.body.group).deep.equal({
+            .then(rsp=> expect(rsp.body).deep.equal({
                 id:1,
                 name:"testedit",
                 description:"group testedit",
@@ -191,8 +196,8 @@ describe('Group Tests API', ()=>{
             .set('Content-Type', 'application/json')
             .set('Authorization', `Bearer ${token}`)
             .send({movieId:"1"})
-            .expect(200)
-            .then(rsp=> expect(rsp.body.group).deep.equal({
+            .expect(202)
+            .then(rsp=> expect(rsp.body).deep.equal({
                 id:1,
                 name:"testedit",
                 description:"group testedit",
@@ -209,8 +214,8 @@ describe('Group Tests API', ()=>{
             .set('Content-Type', 'application/json')
             .set('Authorization', `Bearer ${token}`)
             .send({movieId:"1"})
-            .expect(200)
-            .then(rsp=> expect(rsp.body.group).deep.equal({
+            .expect(202)
+            .then(rsp=> expect(rsp.body).deep.equal({
                 id:1,
                 name:"testedit",
                 description:"group testedit",
@@ -224,6 +229,6 @@ describe('Group Tests API', ()=>{
             .set('Content-Type', 'application/json')
             .set('Authorization', `Bearer ${token}`)
             .expect(202)
-            .then(rsp=> expect(rsp.body.groups).deep.equal([]))
+            .then(rsp=> expect(rsp.body).deep.equal([]))
     })
 })

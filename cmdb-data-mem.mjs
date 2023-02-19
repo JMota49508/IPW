@@ -3,8 +3,7 @@ import crypto from 'crypto'
 
 const users = [
     { id: 1, name:"João Mota", password:"G10-IPW1",token: "1c884cbc-204f-4dc7-9b37-0555275ea3e7",nextGroupId:1,groups:[] },
-    { id: 2, name:"Gonçalo Pinto", password:"G10-IPW2",token: "bf4f490b-a408-4b29-a033-6aa6d4364e92",nextGroupId:1,groups:[] },
-    { id: 3, name:"Frederico Cerqueira", password:"G10-IPW3",token: "0263bfee-7a78-41b4-9fbf-c8daa87a590a",nextGroupId:1,groups:[] }
+    { id: 2, name:"Test User", password:"G10-IPW2",token: "2c884cbc-204f-4dc7-9b37-0555275ea3e7",nextGroupId:1,groups:[] }
 ]
 
 let movies = []
@@ -43,6 +42,12 @@ function getMoviesByName(q,limit){
     const predicate = q ? m => m.title.includes(q) : m => true
     const retMovies = movies.filter(predicate)
     return retMovies.slice(0,limit)
+}
+
+function getMovie(movId){
+    movieData['movieData'].forEach(mData=> movies.push(mData))
+    const movie = movieData['movieData'].find(m=> m.id==movId)
+    return movie
 }
 
 function createGroup(name,desc,user){
@@ -110,6 +115,7 @@ const dataUsers ={
 const dataMovies={
     getMovies,
     getMoviesByName,
+    getMovie,
     addMovieToGroup,
     deleteMovieFromGroup
 }

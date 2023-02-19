@@ -79,24 +79,11 @@ app.post('/createGroup',site.createGroup)
 app.get('/editGroup',site.getEditGroupPage)
 app.get('/deleteGroup',site.getDeleteGroupPage)
 app.get('/deleteMoviePage/:groupId',site.getDeleteMoviePage)
-//app.post('/editGroupInternal',site.editGroup)
-//app.post('/deleteGroupInternal',site.deleteGroup)
-//app.post('/addMovieToGroup',site.addMovieToGroup)
-//app.post('/deleteMovieFromGroup/:groupId',site.deleteMovieFromGroup)
 
 //Authenticated Routes
 app.put("/api/editGroup",webapi.editGroup)
 app.delete("/api/group/:groupId",webapi.deleteGroup)
 app.put("/api/group/:groupId/:movieId",webapi.addMovieToGroup)
 app.delete("/api/group/:groupId/:movieId",webapi.deleteMovieFromGroup)
-/*
-app.get("/movieapi",webapi.getMovies)
-app.get("/getMovie",webapi.getMoviesByName)
-app.post("/user",webapi.createUser)
-app.get("/user",webapi.getUsers)
-app.post("/group",webapi.createGroup)
-app.get("/group", webapi.getGroups)
-app.get("/group/:groupId", webapi.getGroupById)
-*/
 
 app.listen(Port, ()=>console.log("Listening on PORT:" + Port))

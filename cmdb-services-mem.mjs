@@ -11,8 +11,10 @@ export default function(movieData,userData){
     return{
         createUser: createUser,
         getUsers: getUsers,
+        getUser: getUser,
         getMovies: getMovies,
         getMoviesByName: getMoviesByName,
+        getMovie: getMovie,
         getGroups: getGroups,
         getGroupById: getGroupById,
         editGroup: editGroup,
@@ -25,6 +27,10 @@ export default function(movieData,userData){
     if(!username) throw errors.INVALID_PARAMETER("username")
     if(!password) throw errors.INVALID_PARAMETER("password")
     return userData.createUser(username,password)
+    }
+    async function getUser(token){
+        if(token=='') throw errors.USER_NOT_FOUND()
+        return userData.getUser(token)
     }
     async function getUsers(){
         return userData.getUsers()
@@ -43,7 +49,10 @@ export default function(movieData,userData){
         }
         return movieData.getMoviesByName(q,limit)
     }
-    async function getGroups(token){  
+    async function getMovie(movieId){
+        return movieData.getMovie(movieId)
+    }
+    async function getGroups(token){
         let user = userData.getUser(token)
         if(!user) {
             throw errors.USER_NOT_FOUND()

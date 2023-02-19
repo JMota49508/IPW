@@ -12,8 +12,6 @@ export default function (services) {
 
     return {
       getHome: getHome,
-      /*login: login,
-      signup: signup,*/
       signout: signout,
       deleteUser: deleteUser,
       moviesPage: moviesPage,

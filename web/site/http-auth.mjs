@@ -25,9 +25,9 @@ export default function (services) {
 
   async function signup(req,rsp){
     const username = req.body.username
-    const pass = req.body.password
+    const password = req.body.password
     try{
-      const signup = await services.createUser(username,pass)
+      const signup = await services.createUser(username,password)
       const user = await services.login(username,pass)
       req.login({username: user.name, token: user.token}, ()=> rsp.redirect('/'))
     } catch(e){
